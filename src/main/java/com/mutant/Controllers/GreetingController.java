@@ -18,6 +18,22 @@ public class GreetingController {
     return new Greeting(counter.incrementAndGet(),
             String.format(template, name));
   }
+
+  @RequestMapping("/binaryGap")
+  public Integer binaryGap(@RequestParam(value="number") Integer number) {
+    if (number != null) {
+      number >>>= Integer.numberOfTrailingZeros(number); // descartar todos los 0 al final del nro binario
+      int steps = 0;
+      while ((number & (number+ 1)) != 0) {
+        number |= number>>> 1;
+        steps++;
+      }
+      return steps;
+    } else {
+      return 0;
+    }
+
+  }
 }
 /*
 @RequestParam binds the value of the query string parameter name into the name parameter of the greeting() method.
