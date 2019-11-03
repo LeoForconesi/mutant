@@ -1,4 +1,4 @@
-package com.mutant.Domain;
+package com.mutant.domain;
 //import org.springframework.data.annotation.Id;
 
 public class Greeting {

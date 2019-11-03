@@ -1,14 +1,19 @@
-package com.mutant.Controllers;
+package com.mutant.controllers;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.mutant.Domain.Greeting;
+import com.mutant.domain.Greeting;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class GreetingController {
+
+  private static Logger logger =  Logger.getGlobal();
 
   private static final String template = "Hello, %s!";
   private final AtomicLong counter = new AtomicLong();
@@ -19,7 +24,7 @@ public class GreetingController {
             String.format(template, name));
   }
 
-  @RequestMapping("/binaryGap")
+  @RequestMapping(value="/binaryGap", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
   public Integer binaryGap(@RequestParam(value="number") Integer number) {
     if (number != null) {
       number >>>= Integer.numberOfTrailingZeros(number); // descartar todos los 0 al final del nro binario
@@ -28,6 +33,7 @@ public class GreetingController {
         number |= number>>> 1;
         steps++;
       }
+      logger.log(Level.ALL, "Binary gap of " + number + " = " + steps);
       return steps;
     } else {
       return 0;
