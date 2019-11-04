@@ -7,28 +7,36 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class DnaEvaluatorServiceImpl implements DnaEvaluatorService {
+class DnaEvaluatorServiceImpl implements DnaEvaluatorService {
+  private static final String PATTERN_A = "AAAA";
+  private static final String PATTERN_G = "GGGG";
+  private static final String PATTERN_C = "CCCC";
+  private static final String PATTERN_T = "TTTT";
   // Rows and columns in given grid
-  private static int R, C;
+  private static int ROW_SIZE, COLUMN_SIZE;
 
   // For searching in all 8 direction
-  private static int[] x = {-1, -1, -1, 0, 0, 1, 1, 1};
-  private static int[] y = {-1, 0, 1, -1, 1, -1, 0, 1};
+  private static final int[] x = {-1, -1, -1, 0, 0, 1, 1, 1};
+  private static final int[] y = {-1, 0, 1, -1, 1, -1, 0, 1};
 
   @Async
   @Override
   public CompletableFuture<Boolean> isMutant(DnaSample sample) {
+    int matches = 0;
     char[][] grid = createArray(sample.getDna());
-    search2D(grid);
-//    R = 6;
-//    C = 6;
-//    for (int row = 0; row < R; row++) {
-//      for (int col = 0; col < C; col++) {
-//        if (search2D(grid, row, col, "CCCC"))
-//          System.out.println("pattern found at " + row + ", " + col);
-//          return CompletableFuture.completedFuture(true);
-//      }
-//    }
+    for (int row = 0; row < ROW_SIZE; row++) {
+      for (int col = 0; col < COLUMN_SIZE; col++) {
+        if (search2D(grid, row, col, PATTERN_G) ||
+                search2D(grid, row, col, PATTERN_A) ||
+                search2D(grid, row, col, PATTERN_C) ||
+                search2D(grid, row, col, PATTERN_T) ) {
+          matches++;
+          System.out.println("MATCHES = " + matches);
+          System.out.println("pattern found at " + row + ", " + col);
+          if(matches >= 4 ) return CompletableFuture.completedFuture(true);
+        }
+      }
+    }
     return CompletableFuture.completedFuture(false);
   }
 
@@ -41,8 +49,7 @@ public class DnaEvaluatorServiceImpl implements DnaEvaluatorService {
 
     int len = word.length();
 
-    // Search word in all 8 directions
-    // starting from (row,col)
+    // Search word in all 8 directions starting from (row,col)
     for (int dir = 0; dir < 8; dir++) {
       // Initialize starting point for current direction
       int k;
@@ -52,7 +59,7 @@ public class DnaEvaluatorServiceImpl implements DnaEvaluatorService {
       // First character is already checked, match remaining characters
       for (k = 1; k < len; k++) {
         // If out of bound break
-        if (rd >= R || rd < 0 || cd >= C || cd < 0)
+        if (rd >= ROW_SIZE || rd < 0 || cd >= COLUMN_SIZE || cd < 0)
           break;
 
         // If not matched, break
@@ -71,27 +78,13 @@ public class DnaEvaluatorServiceImpl implements DnaEvaluatorService {
     return false;
   }
 
-  // Searches given word in a given
-  // matrix in all 8 directions
-  static void patternSearch(char[][] grid, String word) {
-    // Consider every point as starting point and search given patter
-    for (int row = 0; row < R; row++) {
-      for (int col = 0; col < C; col++) {
-        if (search2D(grid, row, col, word))
-          System.out.println("pattern found at " + row +
-                  ", " + col);
-      }
-    }
-  }
-
-
   private char[][] createArray(String[] dnaList) {
     char[][] mutant;
-    int sizePerColumn = dnaList[0].length();
-    int sizePerRows = dnaList.length;
-    mutant = new char[sizePerRows][sizePerColumn];
-    for (int i = 0; i < sizePerRows; i++) {
-      if (sizePerColumn != dnaList[i].length()) {
+    COLUMN_SIZE = dnaList[0].length();
+    ROW_SIZE = dnaList.length;
+    mutant = new char[ROW_SIZE][COLUMN_SIZE];
+    for (int i = 0; i < ROW_SIZE; i++) {
+      if (COLUMN_SIZE != dnaList[i].length()) {
         throwIllegalArgumentException("Each element in the array must have the same size.");
       }
       char[] row = dnaList[i].toCharArray();

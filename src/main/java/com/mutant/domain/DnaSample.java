@@ -11,7 +11,4 @@ public class DnaSample {
     this.dna = dna;
   }
 
-//  public char[][] getDnaGrid() {
-//
-//  }
 }
