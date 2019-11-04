@@ -1,0 +1,7 @@
+server:
+  port: 8081
+spring:
+  data:
+    mongodb:
+      uri: "mongodb+srv://leoForconesi:<pass>@clusterle0-nm5to.mongodb.net/test?retryWrites=true&w=majority"
+      database: "test"
