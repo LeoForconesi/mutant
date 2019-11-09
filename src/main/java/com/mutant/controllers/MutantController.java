@@ -1,5 +1,6 @@
 package com.mutant.controllers;
 
+import com.mutant.db.MutantRepository;
 import com.mutant.domain.DnaSample;
 import com.mutant.services.DnaEvaluatorService;
 import org.slf4j.Logger;
@@ -23,6 +24,9 @@ public class MutantController {
 
   @Autowired
   private DnaEvaluatorService dnaEvaluatorService;
+
+  @Autowired
+  private MutantRepository mutantRepository;
 
   /**
    *

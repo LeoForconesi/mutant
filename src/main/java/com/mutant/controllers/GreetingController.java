@@ -3,7 +3,6 @@ package com.mutant.controllers;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.mutant.db.GreetingRepository;
-import com.mutant.domain.DnaSample;
 import com.mutant.domain.Greeting;
 import java.util.logging.Logger;
 import java.util.logging.Level;
