@@ -14,6 +14,7 @@
   <b>mvn spring-boot:run</b> 
 </div>
 
+Proyecto para detectar si un humano es mutante basándose en su secuencia de ADN.
 
 run app locally using:
 **mvn spring-boot:run**
