@@ -2,16 +2,23 @@ package com.mutant.controllers;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.mutant.db.GreetingRepository;
+import com.mutant.domain.DnaSample;
 import com.mutant.domain.Greeting;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class GreetingController {
+
+  @Autowired
+  GreetingRepository greetingRepository;
 
   private static Logger logger =  Logger.getGlobal();
 
@@ -20,8 +27,19 @@ public class GreetingController {
 
   @RequestMapping("/greeting")
   public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
-    return new Greeting(counter.incrementAndGet(),
+    Greeting newGreet =  new Greeting(counter.incrementAndGet(),
             String.format(template, name));
+//    greetingRepository.save(newGreet); this works good
+    return newGreet;
+  }
+
+  @RequestMapping(value="/greeting", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<String> saveGreet(@RequestBody Greeting greeting) {
+    if (greeting != null) {
+      greetingRepository.save(greeting);
+      return new ResponseEntity<>("Greeting saved in DB!", HttpStatus.OK);
+    }
+    return new ResponseEntity<>("Failded to save in DB!", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @RequestMapping(value="/binaryGap", method=RequestMethod.GET, produces="application/json; charset=UTF-8")

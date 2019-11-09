@@ -1,10 +1,10 @@
 package com.mutant.domain;
-//import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Id;
 
 public class Greeting {
 
-//  @Id private String id;
-
+  @Id
+  private String id;
   private final long num;
   private final String content;
 
@@ -19,5 +19,14 @@ public class Greeting {
 
   public String getContent() {
     return content;
+  }
+
+  @Override
+  public String toString() {
+    return "Greeting{" +
+            "id='" + id + '\'' +
+            ", num=" + num +
+            ", content='" + content + '\'' +
+            '}';
   }
 }
