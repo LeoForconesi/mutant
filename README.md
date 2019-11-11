@@ -15,8 +15,8 @@
   <li>run app locally using: <p>mvn spring-boot:run</p></li>
   <li>Published urls: 
     <ul>
-      <li><b>[Post] http://ec2-3-132-199-4.us-east-2.compute.amazonaws.com:8081/mutant</b></li>
-      <li><b>[Get] http://ec2-3-132-199-4.us-east-2.compute.amazonaws.com:8081/stats</b></li>        
+      <li><b>[Post] https://ec2-3-132-199-4.us-east-2.compute.amazonaws.com:8081/mutant</b></li>
+      <li><b>[Get] https://ec2-3-132-199-4.us-east-2.compute.amazonaws.com:8081/stats</b></li>        
     </ul>   
   </li>
 </ul> 
