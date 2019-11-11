@@ -17,4 +17,11 @@
 </ul> 
 </div>
 
+<h3>Notes</h3>
+<p>When running this code locally, using the default application.yml included in this example. this app
+will run an in-memory Mongo database for testing purposes. This means that if the application is stopped,
+all data in that database will be lost.</p>
+<p>If this is not a desired behaviour, please replace in application.yml the info for your local Mongo database,
+or use a remote database uri instead.</p>
+
 

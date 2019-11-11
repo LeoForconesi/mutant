@@ -22,10 +22,17 @@ public class MutantStatsServiceImpl implements MutantStatsService {
   private static final Logger log = LoggerFactory.getLogger(MutantStatsServiceImpl.class);
 
   @Autowired
+  private
   MutantRepository mutantRepository;
 
   @Autowired
+  private
   MutantStatsRepository mutantStatsRepository;
+
+  public MutantStatsServiceImpl(MutantRepository mutantRepository, MutantStatsRepository mutantStatsRepository) {
+    this.mutantRepository = mutantRepository;
+    this.mutantStatsRepository = mutantStatsRepository;
+  }
 
   @Override
   public void storeStats(DnaSample sample) throws ExecutionException, InterruptedException {

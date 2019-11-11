@@ -1,7 +1,19 @@
 server:
   port: 8081
+  ssl:
+    # this key is a self signed key only for test purposes for TLS
+    key-store-type: PKCS12
+    key-store: classpath:keystore/keystore.p12
+    key-store-password: a1!b2!c3!
+    key-alias: tomcat
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://<dbUserName>:<password>@<clusterName>.mongodb.net/test?retryWrites=true&w=majority
-      database: <databaseName>
+#replace this uri if you are using a cloud db or local db, if not, a data base in memory will be used instead
+#      uri: mongodb+srv://clusterUsrName:<password>@<clusterName>.mongodb.net/test?retryWrites=true&w=majority
+      database: mutants
+  security:
+    require-ssl: true
+trust:
+  store: classpath:keystore/keystore.p12
+  password: a1!b2!c3!
