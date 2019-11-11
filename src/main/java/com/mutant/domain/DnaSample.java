@@ -4,6 +4,9 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Arrays;
 
+/**
+ * @author - Leonardo A. Forconesi
+ */
 public class DnaSample {
   @Id private String dnaId;
   private String[] dna;
@@ -23,10 +26,6 @@ public class DnaSample {
 
   public String[] getDna() {
     return dna;
-  }
-
-  public void setDna(String[] dna) {
-    this.dna = dna;
   }
 
   public Boolean getMutant() {

@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+/**
+ * @author - Leonardo A. Forconesi
+ */
 
 @RestController
 class MutantController {
@@ -45,14 +50,17 @@ class MutantController {
   public ResponseEntity<String> analyzeMutantCandidate(@RequestBody @Valid DnaSample dnaSample) {
     log.info("Checking if the following sample belongs to a mutant: {}", Arrays.toString(dnaSample.getDna()));
     try {
-      Boolean isMutant = dnaEvaluatorService.isMutant(dnaSample).get();
-      DnaSample result = new DnaSample(dnaSample.getDna(), isMutant);
+      CompletableFuture<Boolean> isMutant = dnaEvaluatorService.isMutant(dnaSample);
+      DnaSample result = new DnaSample(dnaSample.getDna(), isMutant.get());
       mutantRepository.save(result);
       mutantStatsService.storeStats(result);
-      return isMutant ? new ResponseEntity<>("Mutant", HttpStatus.OK) :
+      return result.getMutant() ? new ResponseEntity<>("Mutant", HttpStatus.OK) :
               new ResponseEntity<>("Human", HttpStatus.FORBIDDEN);
     } catch(IllegalArgumentException e) {
       log.error("Malformed Grid ", e);
+      return new ResponseEntity<>("Malformed Grid", HttpStatus.BAD_REQUEST);
+    } catch(ExecutionException e) {
+      log.error("Internal Error ", e.getCause());
       return new ResponseEntity<>("Malformed Grid", HttpStatus.BAD_REQUEST);
     } catch( Exception e) {
       log.error("Internal Error ", e);
@@ -62,7 +70,7 @@ class MutantController {
 
   /**
    *
-   * @return ADN: {“count_mutant_dna”:40, “count_human_dna”:100: “ratio”:0.4}
+   * @return Json element containing total number of mutant dnas, and humans dnas. Also a mutants per humans ratio.
    */
   @GetMapping(path ="stats")
   public ResponseEntity<MutantStats> resultStatistics() {
@@ -73,12 +81,5 @@ class MutantController {
       log.error("Error trying to get mutants stats. ", e);
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-  @SuppressWarnings("SameReturnValue")
-  @GetMapping(path="/serviceStatus")
-  public String isServerUp() {
-    log.info("Checking Api status");
-    return "Api is Up";
   }
 }
